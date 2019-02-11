@@ -1,10 +1,12 @@
 # gh-file-watcher
 Monitors files on GitHub repositories and notifies you about changes. It uses the public GitHub API and can be run as a cron job for automatic monitoring.
 
+**Note**: If you are the owner of a repository, it is probably better to use webhooks for this kind of task. This file watcher is designed for watching repositories you don't own.
+
 ## Requirements
 
 - Python 3.x with Pip
-- Requests package for Python (installable via pip, see (#Installation)[Installation]
+- Requests package for Python installable via pip, see [Installation](#installation)
 
 ## Installation
 
