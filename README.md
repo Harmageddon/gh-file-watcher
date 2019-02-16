@@ -96,4 +96,9 @@ If a file has been updated in the repository on one of the watched branches, a n
 ## Authentication
 In order to get a higher API limit, allowing more requests in a given time period, you might want to consider authenticating the application.
 
-*Authentication is not implemented yet.*
+1. Get an access token:
+    - On GitHub, navigate to [Settings - Developer settings - Personal access tokens](https://github.com/settings/tokens).
+    - Generate a new token. You don't need to give any permissions here, as the token is only going to be used to increase the API limit.
+2. Copy the generated token to a file called `.oauth-token` in the application's directory.
+
+The application should now be able to make authenticated API requests. In case of errors, you will get a notification via mail.

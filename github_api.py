@@ -1,7 +1,14 @@
 import requests
 from datetime import datetime
+import os.path
 
 DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
+headers = {}
+
+if os.path.exists('.oauth-token'):
+    with open('.oauth-token', 'r') as fp:
+        headers['Authorization'] = 'token ' + fp.read()
 
 
 def get_prs(repo, branch, page=1):
@@ -49,9 +56,9 @@ def get_file_commits(repo, file):
 
 
 def api_call(url):
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
 
-    if response.status_code == 403:
+    if response.status_code >= 400:
         raise PermissionError(response.json()['message'])
 
     return response.json()
