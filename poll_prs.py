@@ -13,21 +13,28 @@ with open('watchlist.json', 'r') as fp:
 
 for repo in watchlist:
     notifier = Notifier(repo['mail'])
-    delta = timedelta(**repo['timespan'])
-    time_from = now - delta
 
-    if 'branches' not in repo:
-        repo['branches'] = ['master']
+    try:
+        delta = timedelta(**repo['timespan'])
+        time_from = now - delta
 
-    for branch in repo['branches']:
-        prs = github_api.get_prs_since(repo['repository'], branch, time_from)
-        n = len(prs)
+        if 'branches' not in repo:
+            repo['branches'] = ['master']
 
-        for i in range(n):
-            response = github_api.get_pr_files(repo['repository'], prs[i]['number'])
+        for branch in repo['branches']:
+            prs = github_api.get_prs_since(repo['repository'], branch, time_from)
+            n = len(prs)
 
-            for file in response:
-                if file['filename'] in repo['files']:
-                    notifier.append(notifier.notify_pr(file, prs[i]))
+            for i in range(n):
+                response = github_api.get_pr_files(repo['repository'], prs[i]['number'])
 
-    notifier.send_notifications('[{}] A new pull request changes watched files.'.format(repo['repository']))
+                for file in response:
+                    if file['filename'] in repo['files']:
+                        notifier.append(notifier.notify_pr(file, prs[i]))
+
+        notifier.send_notifications('[{}] A new pull request changes watched files.'.format(repo['repository']))
+
+    except PermissionError as e:
+        notifier.append(notifier.error(e.args[0]), '[{}] API Error!'.format(repo['repository']))
+        notifier.send_notifications('[{}] A new commit changed watched files.'.format(repo['repository']))
+        raise e

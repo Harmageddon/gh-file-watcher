@@ -81,3 +81,19 @@ python poll_prs.py
 
 the application retrieves all pull requests changed within the given timespan that change one of the files defined in the watchlist.
 It then sends notifications about the changes to the defined mail addresses.
+
+### Monitor Commits
+
+By running
+
+```
+python poll_commits.py
+```
+
+the application compares the hashes of all files from the watchlist with the stored hashes from the last run.
+If a file has been updated in the repository on one of the watched branches, a notification is sent, containing the last commit changing the file.
+
+## Authentication
+In order to get a higher API limit, allowing more requests in a given time period, you might want to consider authenticating the application.
+
+*Authentication is not implemented yet.*

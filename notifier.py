@@ -29,6 +29,11 @@ class Notifier:
                 print(mail.as_string())
 
     @staticmethod
+    def indent_subsequent(string):
+        padding = '  '
+        return padding.join(string.splitlines(True))
+
+    @staticmethod
     def notify_pr(file, pr):
         return '*{}* has been {} in the following pull request:\n' \
                '  {} by {}\n' \
@@ -36,3 +41,20 @@ class Notifier:
                '  {}\n' \
             .format(file['filename'], file['status'], pr['title'], pr['user']['login'], file['additions'],
                     file['deletions'], pr['html_url'])
+
+    @staticmethod
+    def notify_commit(file, commit):
+        return '*{}* has been changed in the following commit:\n' \
+               '  Author: {}. Committer: {}.\n\n' \
+               '  {}\n\n' \
+               '  {}\n' \
+            .format(file, commit['author']['login'], commit['committer']['login'],
+                    Notifier.indent_subsequent(commit['commit']['message']), commit['html_url'])
+
+    @staticmethod
+    def error(message):
+        return 'An API request failed. Consider using authentication for your requests. ' \
+               'Refer to the manual for more information.\n' \
+               'Error message:\n\n' \
+               '{}\n'\
+            .format(message)
